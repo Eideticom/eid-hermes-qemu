@@ -9,7 +9,7 @@ jobs:
    compile:
      runs-on: ubuntu-20.04
      env:
-       UBPF_SHA: 0014f298be3e2a636fd6243908238fb027527e28
+       UBPF_SHA: 9ee9e3372d5b2a4b18f73c5dd58935ce08e2821f
      steps:
        - uses: actions/checkout@v2
          with:
