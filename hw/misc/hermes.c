@@ -138,15 +138,15 @@ static struct __attribute__((__packed__)) hermes_bar0 {
     const uint8_t ehdslot;
     const uint8_t rsv0;
 
-    const uint32_t ehpsoff;
+    const uint64_t ehpsoff;
     const uint32_t ehpssze;
-    const uint32_t ehdsoff;
+    const uint64_t ehdsoff;
     const uint32_t ehdssze;
 
     struct hermes_cmd commands[UBPF_ENGINES];
     struct hermes_cmd_ctrl cmdctrl[UBPF_ENGINES];
 } bar0_init = {
-    .ehver =  1,
+    .ehver =  2,
     .ehbld = QEMU_PKGVERSION,
     .eheng = UBPF_ENGINES,
     .ehpslot = 16,
@@ -565,7 +565,7 @@ static uint64_t hermes_bar0_read(void *opaque, hwaddr addr, unsigned size)
     uint32_t *ptr;
     uint32_t val = 0;
 
-    if (addr + size <= 0x48) {
+    if (addr + size <= offsetof(struct hermes_bar0, commands)) {
         ptr = (uint32_t *) &((uint8_t *) &bar0_init)[addr];
         val = *ptr;
         switch (size) {
@@ -631,7 +631,7 @@ static void hermes_bar0_write(void *opaque, hwaddr addr, uint64_t val,
             qemu_mutex_unlock(&hermes->ubpf[engine].bpf_mutex);
             bar0_init.cmdctrl[engine].ehcmdexec = HERMES_CMD_STOP;
         }
-    } else if (addr + size > 0x48) {
+    } else if (addr + size > offsetof(struct hermes_bar0, commands)) {
         hermes_bar_warn_invalid(0, addr);
     } else {
         hermes_bar_warn_read_only(0, addr);
