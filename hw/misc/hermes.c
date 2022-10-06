@@ -71,7 +71,7 @@
 
 typedef struct HermesState HermesState;
 
-static const struct hermes_bar0 {
+static const struct __attribute__((__packed__)) hermes_bar0 {
     uint32_t ehver;
     char ehbld[48];
 
